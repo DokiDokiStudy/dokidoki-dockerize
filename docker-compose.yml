@@ -1,0 +1,49 @@
+# 통합실행 docker-compose
+version: "3.8"
+
+services:
+  frontend:
+    build:
+      context: ./frontend/Front/Web
+      dockerfile: Dockerfile
+      target: prod
+    volumes:
+      - ./frontend:/app
+    networks:
+      - dokidoki-network
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "8080:80"
+    networks:
+      - dokidoki-network
+    env_file:
+      - .env
+    # depends_on:
+    #   - db
+
+# DB도 서브모듈로써 따로 나눌거면 아래와 같은 구조로 정의하면 되겠습니다.
+#   db:
+#     image: mysql:8.0
+#     command: --default-authentication-plugin=mysql_native_password
+#     env_file:
+#       - .env
+#     volumes:
+#       - db_data:/var/lib/mysql
+#     ports:
+#       - "3306:3306"
+#     networks:
+#       - dokidoki-network
+
+# volumes:
+#   db_data:
+
+networks:
+  dokidoki-network:
