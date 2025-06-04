@@ -16,7 +16,5 @@ services:
     environment:
       - VITE_DEV_MODE=true
 
-  # backend:
-
 networks:
   dokidoki-network:

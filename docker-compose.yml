@@ -2,17 +2,30 @@
 version: "3.8"
 
 services:
+  mysql:
+    image: mysql:8.0
+    container_name: mysql_db
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
   frontend:
     build:
-      context: ./frontend/Front/Web
+      context: ./frontend
       dockerfile: Dockerfile
       target: prod
+    container_name: frontend_app
     volumes:
       - ./frontend:/app
+      - /app/node_modules
     networks:
       - dokidoki-network
     ports:
-      - "3000:80"
+      - "3030:3030"
     depends_on:
       - backend
 
@@ -20,30 +33,30 @@ services:
     build:
       context: ./backend
       dockerfile: Dockerfile
+    container_name: nestjs_app
+    restart: always
+    depends_on:
+      - mysql
+    environment:
+      DB_HOST: mysql_db
+      DB_PORT: 3306
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_NAME: ${DB_NAME}
     ports:
-      - "8080:80"
-    networks:
-      - dokidoki-network
-    env_file:
-      - .env
-    # depends_on:
-    #   - db
+      - "3000:3000"
+    volumes:
+      - ./backend:/app
+      - /app/node_modules
 
-# DB도 서브모듈로써 따로 나눌거면 아래와 같은 구조로 정의하면 되겠습니다.
-#   db:
-#     image: mysql:8.0
-#     command: --default-authentication-plugin=mysql_native_password
-#     env_file:
-#       - .env
-#     volumes:
-#       - db_data:/var/lib/mysql
-#     ports:
-#       - "3306:3306"
-#     networks:
-#       - dokidoki-network
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - "8080:8080"
 
-# volumes:
-#   db_data:
+volumes:
+  mysql_data:
 
 networks:
   dokidoki-network:
