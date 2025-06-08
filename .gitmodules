@@ -4,3 +4,9 @@
 [submodule "backend"]
 	path = backend
 	url = https://github.com/DokiDokiStudy/practice_back
+[submodule "practice_back"]
+	path = practice_back
+	url = https://github.com/DokiDokiStudy/practice_back.git
+[submodule "practice-front"]
+	path = practice-front
+	url = https://github.com/DokiDokiStudy/practice-front
