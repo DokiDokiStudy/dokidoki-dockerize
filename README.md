@@ -5,6 +5,20 @@
  - git submodule add https://github.com/DokiDokiStudy/practice-back backend
 #### frontend
  - git submodule add https://github.com/DokiDokiStudy/practice-front frontend
+#### algorithms
+ - git submodule add https://github.com/DokiDokiStudy/Algorithms-study.git algorithms
+
+### 알고리즘 스터디 운영
+- 알고리즘 저장소는 `algorithms` 서브모듈로 연결되어 있습니다.
+- 최초 클론 후 서브모듈 초기화:
+```bash
+git submodule update --init --recursive
+```
+- 알고리즘 저장소 최신화:
+```bash
+git submodule update --remote algorithms
+```
+- 상세 운영 가이드: `docs/algorithms-study-workflow.md`
 
 #### RUN docker-compose : 권한 부여
 ```bash
@@ -53,3 +67,20 @@ https://github.com/DokiDokiStudy/practice_back
 
 4. 좋아요 눌러서 좋아요 id가 생성되면 반환되어야 함
     해당 id가지고 유저 액션 연속성 유지 가능
+
+### 2025-07-13 정리
+1. 로그인, 일반 게시글 관련하여 리액트 쿼리 적용
+    1.1) src/api/* : 각 도메인(기능)에 대한 레파지토리 역할 수행
+        -> 조건(필터)에 맞게 데이터를 요청하고 그대로 내어주는 것이 좋다고 생각함.
+    1.2) src/hooks/* : 
+        -> 응답에 대해 가공도 이루어지는 곳
+        -> 추후 convertData 같은 패턴들은 여기서 다뤄지면 좋겠다는 생각
+    1.3) 흐름 정리 (게시글 기준)
+        로직단위 호출 -> hooks/usePost.ts(쿼리 조합) -> api/Posts.ts(기능에 대한 호출 책임부) -> lib/api(공통 통신부)
+    
+    2.1) 로그인 시 user 객체 안에 담아서 사용하도록 수정함
+        => 나중에는 sessionStorage를 쓰도록 해봐야겠습니다.
+
+    3.1) useQuery와 useMutation 동작이 달라서 hooks도 분리해서 관리하는게 좋다길래 나눠봤는데 보통 어떻게 관리하시나요?
+        => 나눈 기준은 일단 조회 Or DML입니다.
+2. BoardLayout 좀 답답한 감이 있어서 조금 변경함
